@@ -47,7 +47,7 @@ The main actor is `ALlamaActor`.
 
 ### Requirements
 
-* Unreal Engine **5.x**
+* Unreal Engine **5.8.2**
 * Visual Studio with C++ support
 * Windows
 * NVIDIA GPU recommended for the provided llama.cpp build
