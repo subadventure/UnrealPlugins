@@ -10,6 +10,13 @@ This repository contains a small Unreal Engine project showcasing two custom C++
 
 The project is designed as a ready-to-open technical showcase. Both demo actors are available in the default level, allowing the plugins to be tested without additional scene setup.
 
+## Platform Support
+
+- **Currently supported:** Windows
+- **Unreal Engine:** 5.8.2
+
+The project is currently developed and tested on Windows.
+Linux and macOS are not officially supported at this time.
 ## Getting Started
 
 ### Requirements
