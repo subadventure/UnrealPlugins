@@ -1,0 +1,24 @@
+# Unreal Engine generated data
+DerivedDataCache/
+Intermediate/
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# Visual Studio generated files
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln
+*.slnx
+
+
+# OS
+.DS_Store
+Thumbs.db
