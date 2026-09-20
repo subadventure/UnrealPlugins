@@ -1,147 +1,156 @@
+
 # UnrealPlugins
+
 Unreal Engine C++ plugins for procedural tree generation and local LLM inference using llama.cpp.
 
-# Unreal C++ Showcase
+This repository contains a small Unreal Engine project showcasing two custom C++ plugins:
 
-A small Unreal Engine project showcasing two custom C++ plugins:
+- **TreeGen** - Procedural tree generation using Unreal Engine's spline and mesh systems.
+- **UnrealLlama** - Local LLM inference integrated directly into Unreal Engine through llama.cpp.
 
-* **TreeGen** - procedural tree generation using Unreal Engine's spline and mesh systems.
-* **UnrealLlama** - local LLM inference integrated directly into Unreal Engine through `llama.cpp`.
-
-The project is intentionally set up as a ready-to-open showcase. The default level already contains both demo actors in front of the camera.
-
-## Features
-
-### TreeGen
-
-`TreeGen` generates procedural trees directly inside Unreal Engine.
-
-* Procedural branch generation using `USplineComponent`
-* Recursive branch structures with configurable depth
-* Randomized branch direction and growth
-* Procedural trunk mesh generation using `FMeshDescription`
-* Multiple generated LODs
-* Procedural foliage placement using Unreal's instanced foliage system
-* Optional conversion of the generated tree into a `UStaticMesh` asset
-* Editor-callable generation through Blueprint/Details Panel
-
-The main actor is `ATreeGenActor`.
-
-### UnrealLlama
-
-`UnrealLlama` integrates local LLM inference into Unreal Engine using [`llama.cpp`](https://github.com/ggml-org/llama.cpp).
-
-* Loads local GGUF models from the plugin's `Content/Models` directory
-* Uses the `llama.cpp` C API directly from C++
-* Chat-template based prompt formatting
-* Tokenization and autoregressive token generation
-* Configurable token generation count
-* Persistent conversation messages
-* Asynchronous inference using Unreal Tasks
-* Live response output through `UTextRenderComponent`
-* Model selection exposed to the Unreal Editor
-
-The main actor is `ALlamaActor`.
+The project is designed as a ready-to-open technical showcase. Both demo actors are available in the default level, allowing the plugins to be tested without additional scene setup.
 
 ## Getting Started
 
 ### Requirements
 
-* Unreal Engine **5.8.2**
-* Visual Studio with C++ support
-* Windows
-* NVIDIA GPU recommended for the provided llama.cpp build
+- Unreal Engine **5.8.2**
+- Visual Studio with C++ development support
+- Windows
+- NVIDIA GPU recommended for the provided llama.cpp build
 
-### 1. Clone the repository
+### 1. Open the Project
 
-Clone the repository and open the `.uproject` file in Unreal Engine.
+1. Download or clone this repository.
+2. Open `Blank.uproject` using Unreal Engine 5.8.2.
+3. Open the default level.
 
-### 2. TreeGen
+### 2. Find the Demo Actors
 
-No additional setup is required for the basic TreeGen demonstration if the required plugin assets are included in the repository.
+The showcase level includes both demo actors:
 
-Open the default level and select `BP_TreeGen`.
+- `BP_LlamaActor`
+- `BP_TreeGen`
 
-The tree can be regenerated through the exposed `Generate` function.
+You can either select an existing actor in the level or place a new instance of the corresponding Blueprint.
 
-### 3. UnrealLlama
+Select the actor and open its **Details Panel**.
 
-Place a compatible GGUF model inside:
+### 3. Test UnrealLlama
 
-```text
-Plugins/
-└── UnrealLlama/
-    └── Content/
-        └── Models/
-            └── <your-model>.gguf
-```
+1. Select `BP_LlamaActor`.
+2. Locate the **Llama** section in the Details Panel.
+3. Configure the model path or select a model using the exposed property.
+4. Enter a prompt in `In Prompt`.
+5. Execute `SendPrompt`.
 
-Select the model through the `Used Model` property of `BP_LlamaActor`.
+The generated response is displayed directly in the level through the actor's text component.
 
-Enter a prompt in `In Prompt` and execute `Send Prompt`.
+#### Model Setup
 
-The generated response is displayed by the actor in the level.
+UnrealLlama requires a compatible GGUF model.
 
-> Model files are intentionally not included in the repository. Large model files should not be committed to the Git repository.
+You can either download a model or use an existing GGUF model of your choice.
 
-## Project Structure
+- Models are not included in this repository.
+- You can choose a custom model path.
+- Make sure the selected path is correctly configured in the actor's exposed property.
+- The current implementation uses the model's default chat template.
+- **System messages are currently not supported as a separate configuration option.** Ignore the system role when configuring your prompt.
 
-```text
-UnrealCppShowcase/
-├── Content/
-│   └── ...
-├── Plugins/
-│   ├── TreeGen/
-│   │   ├── Source/
-│   │   └── Content/
-│   │
-│   └── UnrealLlama/
-│       ├── Source/
-│       │   ├── UnrealLlama/
-│       │   └── ThirdParty/
-│       │       └── Llama/
-│       └── Content/
-│           └── Models/
-│
-├── Config/
-├── Source/
-├── UnrealCppShowcase.uproject
-└── README.md
-```
+The model must be compatible with the llama.cpp build included in the plugin.
 
-## Showcase Level
+> Model files can be large and may have individual licensing and usage restrictions. Always check the license of the model you use.
 
-The default level is configured as a simple technical demonstration.
+### 4. Test TreeGen
 
-On startup, the scene already contains:
+1. Select `BP_TreeGen` or place a new TreeGen actor in the level.
+2. Locate the **Tree** section in the Details Panel.
+3. Configure the available generation parameters if required.
+4. Execute `Generate`.
 
-* `BP_TreeGen`
-* `BP_LlamaActor`
+The actor generates a procedural tree using Unreal Engine's spline and mesh systems.
 
-This makes it possible to inspect and test both plugins without first constructing a demo scene.
+By default, foliage is generated using Unreal Engine's instanced foliage system.
 
-## Technical Focus
+The generated tree can also be converted into a `UStaticMesh` asset when required.
 
-This project focuses on integrating lower-level C++ systems into Unreal Engine rather than building a complete gameplay framework.
+## Plugins
 
 ### TreeGen
 
-The generator works with Unreal's:
+`TreeGen` is a procedural tree generation plugin written in Unreal Engine C++.
 
-* `USplineComponent`
-* `FMeshDescription`
-* `FStaticMeshAttributes`
-* `UStaticMesh`
-* `UFoliageType_InstancedStaticMesh`
-* `AInstancedFoliageActor`
+It generates tree structures, branches and foliage using Unreal Engine's native systems.
 
-The procedural branch representation stores branch depth, length, radius, parent distance, spline points and bounds before the mesh is generated.
+#### Features
+
+- Procedural branch generation using `USplineComponent`
+- Recursive branch structures with configurable depth
+- Randomized branch direction and growth
+- Procedural trunk mesh generation using `FMeshDescription`
+- Multiple generated LODs
+- Procedural foliage placement using Unreal's instanced foliage system
+- Optional conversion of generated trees into `UStaticMesh` assets
+- Editor-callable generation through Blueprint and the Details Panel
+
+**Main actor:** `ATreeGenActor`
 
 ### UnrealLlama
 
-The LLM integration works directly with the `llama.cpp` API.
+`UnrealLlama` integrates local large language model inference into Unreal Engine using the llama.cpp C API.
 
-The plugin handles:
+The plugin provides a direct C++ integration between Unreal Engine and a native third-party inference library.
+
+#### Features
+
+- Local GGUF model loading
+- Custom model path configuration
+- Direct integration with the llama.cpp C API
+- Chat-template based prompt formatting
+- Tokenization and autoregressive token generation
+- Configurable token generation count
+- Persistent conversation messages
+- Asynchronous inference using Unreal Tasks
+- Live response output through `UTextRenderComponent`
+- Model selection exposed to the Unreal Editor
+
+**Main actor:** `ALlamaActor`
+
+## Technical Overview
+
+This project focuses on integrating lower-level C++ systems into Unreal Engine rather than implementing a complete gameplay framework.
+
+The showcase demonstrates procedural geometry generation, editor tooling and native third-party library integration.
+
+### TreeGen Implementation
+
+The TreeGen plugin works with Unreal Engine's:
+
+- `USplineComponent`
+- `FMeshDescription`
+- `FStaticMeshAttributes`
+- `UStaticMesh`
+- `UFoliageType_InstancedStaticMesh`
+- `AInstancedFoliageActor`
+
+The procedural branch representation stores information such as:
+
+- Branch depth
+- Branch length and radius
+- Parent distance
+- Spline points
+- Bounds
+
+This data is used during the procedural mesh generation process.
+
+The generated tree can remain within Unreal's instanced foliage workflow or be converted into a static mesh asset.
+
+### UnrealLlama Implementation
+
+The UnrealLlama plugin integrates directly with the llama.cpp API.
+
+The inference pipeline handles:
 
 1. Model initialization
 2. Context creation
@@ -154,33 +163,35 @@ The plugin handles:
 9. Live response display
 10. Cleanup of model, context and sampler resources
 
-Inference is launched asynchronously so the generation work does not have to run directly on the calling thread.
+Inference is launched asynchronously so that the generation work does not have to execute directly on the calling thread.
+
+The plugin uses native llama.cpp and GGUF model resources to provide local inference within Unreal Engine.
 
 ## Third-Party Software
 
-The UnrealLlama plugin uses [`llama.cpp`](https://github.com/ggml-org/llama.cpp) for local LLM inference.
+### llama.cpp
 
-`llama.cpp` is distributed under the MIT License. See the upstream project and its license information for the applicable terms.
+The UnrealLlama plugin uses [llama.cpp](https://github.com/ggml-org/llama.cpp) for local LLM inference.
 
-Model files are separate from this project and may have their own licenses and usage restrictions. Always check the license of the model you use.
+llama.cpp is distributed under the MIT License. Refer to the upstream repository and its license information for the applicable terms.
 
-## License
+Model files are separate from this project and may have their own licenses and usage restrictions.
 
-The original code in this repository is licensed under the terms of the repository's license.
+Always check the license of the model you use.
 
-Third-party software and assets remain subject to their respective licenses.
+## Project Status
 
-## Status
+This repository is a technical showcase and portfolio project rather than a production-ready Unreal Engine plugin suite.
 
-This repository is a technical showcase and portfolio project rather than a production-ready Unreal plugin suite.
+The project is intended to demonstrate:
 
-The project is primarily intended to demonstrate:
+- Unreal Engine C++ development
+- Procedural geometry generation
+- Runtime and editor tooling
+- MeshDescription workflows
+- Foliage generation
+- Native third-party library integration
+- Local LLM inference
+- Unreal Engine and third-party C++ interoperability
 
-* Unreal Engine C++ development
-* Procedural geometry generation
-* Runtime/editor tooling
-* MeshDescription workflows
-* Foliage generation
-* Native third-party library integration
-* Local LLM inference
-* Unreal/third-party C++ interoperability
+The plugins are actively developed and may contain experimental or incomplete functionality.
